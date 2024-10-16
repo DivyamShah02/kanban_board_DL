@@ -100,7 +100,7 @@
     <button type="button" style="display: none;" class="btn btn-primary" data-bs-toggle="modal"
         data-bs-target="#detailsModal" id="detailsBtn"></button>
 
-    <!-- Modal -->
+    <!-- Task Details Modal -->
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -115,6 +115,7 @@
                     Create project website
                 </div>
                 <div class="modal-footer">
+                    <a id="edit_detail_task" class="btn btn-primary">Edit</a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                 </div>
@@ -122,7 +123,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Add Task Modal -->
     <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -158,11 +159,27 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="client_work" class="form-label">Client Work</label>
+                                <label for="client_work" class="form-label">Client Work</label><br>
+                                <!-- <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="client_work" id="client_work_Yes"
+                                        value="true">
+                                    <label class="form-check-label" for="client_work_Yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="client_work" id="client_work_No"
+                                        value="false">
+                                    <label class="form-check-label" for="client_work_No">No</label>
+                                </div> -->
                                 <select class="form-control" id="client_work" name="client_work">
                                     <option value="false">No</option>
                                     <option value="true">Yes</option>
                                 </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="client" class="form-label">Client Name</label>
+                                <input type="text" class="form-control" id="client" name="client" required
+                                    placeholder="Enter client name">
                             </div>
 
                         </form>
@@ -184,11 +201,16 @@
         <div class="row">
             <!-- Pending Column -->
             <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Pending ({{len_Pending}})</h4>
+                <h4 id="Pending">Pending ({{len_Pending}})</h4>
                 <div class="kanban-column" id="Pending-column">
                     {% for Pending_task in Pending %}
+                    {% if Pending_task.client_work == True %}
+                    <div class="kanban-card client-task" id="Pending_task{{forloop.counter}}" draggable="true" 
+                        onclick="openDetails(`{{Pending_task.title}}`, `{{Pending_task.description}}`, `{{Pending_task.date}}`, `{{Pending_task.id}}`)">
+                    {% else %}
                     <div class="kanban-card inhouse-task" id="Pending_task{{forloop.counter}}" draggable="true" 
-                        onclick="openDetails('{{Pending_task.title}}', '{{Pending_task.description}}','{{Pending_task.date}}')">
+                        onclick="openDetails(`{{Pending_task.title}}`, `{{Pending_task.description}}`, `{{Pending_task.date}}`, `{{Pending_task.id}}`)">
+                    {% endif %}
                         <h5 id="{{Pending_task.id}}">{{Pending_task.title}}</h5>                        
                     </div>
                     {% endfor %}
@@ -197,11 +219,16 @@
 
             <!-- Back_Log Column -->
             <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Back_Log ({{len_Back_Log}})</h4>
+                <h4 id="Back_Log">Back_Log ({{len_Back_Log}})</h4>
                 <div class="kanban-column" id="Back_Log-column">
                     {% for Back_Log_task in Back_Log %}
+                    {% if Back_Log_task.client_work == True %}
+                    <div class="kanban-card client-task" id="Back_Log_task{{forloop.counter}}" draggable="true" 
+                        onclick="openDetails(`{{Back_Log_task.title}}`, `{{Back_Log_task.description}}`, `{{Back_Log_task.date}}`, `{{Back_Log_task.id}}`)">
+                    {% else %}
                     <div class="kanban-card inhouse-task" id="Back_Log_task{{forloop.counter}}" draggable="true" 
-                        onclick="openDetails('{{Back_Log_task.title}}', '{{Back_Log_task.description}}','{{Back_Log_task.date}}')">
+                        onclick="openDetails(`{{Back_Log_task.title}}`, `{{Back_Log_task.description}}`, `{{Back_Log_task.date}}`, `{{Back_Log_task.id}}`)">
+                    {% endif %}
                         <h5 id="{{Back_Log_task.id}}">{{Back_Log_task.title}}</h5>                        
                     </div>
                     {% endfor %}
@@ -210,11 +237,16 @@
 
             <!-- On_Hold Column -->
             <div class="col-md-4 col-lg-2 mt-3">
-                <h4>On_Hold ({{len_On_Hold}})</h4>
+                <h4 id="On_Hold">On_Hold ({{len_On_Hold}})</h4>
                 <div class="kanban-column" id="On_Hold-column">
                     {% for On_Hold_task in On_Hold %}
+                    {% if On_Hold_task.client_work == True %}
+                    <div class="kanban-card client-task" id="On_Hold_task{{forloop.counter}}" draggable="true" 
+                        onclick="openDetails(`{{On_Hold_task.title}}`, `{{On_Hold_task.description}}`, `{{On_Hold_task.date}}`, `{{On_Hold_task.id}}`)">
+                    {% else %}
                     <div class="kanban-card inhouse-task" id="On_Hold_task{{forloop.counter}}" draggable="true" 
-                        onclick="openDetails('{{On_Hold_task.title}}', '{{On_Hold_task.description}}','{{On_Hold_task.date}}')">
+                        onclick="openDetails(`{{On_Hold_task.title}}`, `{{On_Hold_task.description}}`, `{{On_Hold_task.date}}`, `{{On_Hold_task.id}}`)">
+                    {% endif %}
                         <h5 id="{{On_Hold_task.id}}">{{On_Hold_task.title}}</h5>                        
                     </div>
                     {% endfor %}
@@ -223,11 +255,16 @@
 
             <!-- In_Progress Column -->
             <div class="col-md-4 col-lg-2 mt-3">
-                <h4>In_Progress ({{len_In_Progress}})</h4>
+                <h4 id="In_Progress">In_Progress ({{len_In_Progress}})</h4>
                 <div class="kanban-column" id="In_Progress-column">
                     {% for In_Progress_task in In_Progress %}
+                    {% if In_Progress_task.client_work == True %}
+                    <div class="kanban-card client-task" id="In_Progress_task{{forloop.counter}}" draggable="true" 
+                        onclick="openDetails(`{{In_Progress_task.title}}`, `{{In_Progress_task.description}}`, `{{In_Progress_task.date}}`, `{{In_Progress_task.id}}`)">
+                    {% else %}
                     <div class="kanban-card inhouse-task" id="In_Progress_task{{forloop.counter}}" draggable="true" 
-                        onclick="openDetails('{{In_Progress_task.title}}', '{{In_Progress_task.description}}','{{In_Progress_task.date}}')">
+                        onclick="openDetails(`{{In_Progress_task.title}}`, `{{In_Progress_task.description}}`, `{{In_Progress_task.date}}`, `{{In_Progress_task.id}}`)">
+                    {% endif %}
                         <h5 id="{{In_Progress_task.id}}">{{In_Progress_task.title}}</h5>                        
                     </div>
                     {% endfor %}
@@ -236,11 +273,16 @@
 
             <!-- Testing_Client Column -->
             <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Testing_Client ({{len_Testing_Client}})</h4>
+                <h4 id="Testing_Client">Testing_Client ({{len_Testing_Client}})</h4>
                 <div class="kanban-column" id="Testing_Client-column">
                     {% for Testing_Client_task in Testing_Client %}
+                    {% if Testing_Client_task.client_work == True %}
+                    <div class="kanban-card client-task" id="Testing_Client_task{{forloop.counter}}" draggable="true" 
+                        onclick="openDetails(`{{Testing_Client_task.title}}`, `{{Testing_Client_task.description}}`, `{{Testing_Client_task.date}}`, `{{Testing_Client_task.id}}`)">
+                    {% else %}
                     <div class="kanban-card inhouse-task" id="Testing_Client_task{{forloop.counter}}" draggable="true" 
-                        onclick="openDetails('{{Testing_Client_task.title}}', '{{Testing_Client_task.description}}','{{Testing_Client_task.date}}')">
+                        onclick="openDetails(`{{Testing_Client_task.title}}`, `{{Testing_Client_task.description}}`, `{{Testing_Client_task.date}}`, `{{Testing_Client_task.id}}`)">
+                    {% endif %}
                         <h5 id="{{Testing_Client_task.id}}">{{Testing_Client_task.title}}</h5>                        
                     </div>
                     {% endfor %}
@@ -249,76 +291,22 @@
 
             <!-- Deployed Column -->
             <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Deployed ({{len_Deployed}})</h4>
+                <h4 id="Deployed">Deployed ({{len_Deployed}})</h4>
                 <div class="kanban-column" id="Deployed-column">
                     {% for Deployed_task in Deployed %}
+                    {% if Deployed_task.client_work == True %}
+                    <div class="kanban-card client-task" id="Deployed_task{{forloop.counter}}" draggable="true" 
+                        onclick="openDetails(`{{Deployed_task.title}}`, `{{Deployed_task.description}}`, `{{Deployed_task.date}}`, `{{Deployed_task.id}}`)">
+                    {% else %}
                     <div class="kanban-card inhouse-task" id="Deployed_task{{forloop.counter}}" draggable="true" 
-                        onclick="openDetails('{{Deployed_task.title}}', '{{Deployed_task.description}}','{{Deployed_task.date}}')">
+                        onclick="openDetails(`{{Deployed_task.title}}`, `{{Deployed_task.description}}`, `{{Deployed_task.date}}`, `{{Deployed_task.id}}`)">
+                    {% endif %}
                         <h5 id="{{Deployed_task.id}}">{{Deployed_task.title}}</h5>                        
                     </div>
                     {% endfor %}
                 </div>
             </div>
 
-
-
-            <!-- -----------------------------------------------------------------------------------------------------------
-            ----------------------------------------------------------------------------------------------------------- -->
-            <!-- Back Log Column -->
-            <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Back Log</h4>
-                <div class="kanban-column" id="backlog-column">
-                    <div class="kanban-card client-task" id="task2" draggable="true"
-                        onclick="openDetails('title', 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis officiis accusamus omnis beatae nam, laboriosam repellendus, vitae cumque magni, culpa ipsa est sint aperiam doloribus labore sunt numquam? Explicabo, optio?','14/10/2024')">
-                        <h5>Task 1</h5>
-                        <div class="card-details">Due: 2024-10-20 14:00</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- On Hold Column -->
-            <div class="col-md-4 col-lg-2 mt-3">
-                <h4>On Hold</h4>
-                <div class="kanban-column" id="onhold-column">
-                    <div class="kanban-card" id="task3" draggable="true">
-                        <h5>Task 2</h5>
-                        <div class="card-details">Due: 2024-10-22 16:30</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- In Progress Column -->
-            <div class="col-md-4 col-lg-2 mt-3">
-                <h4>In Progress</h4>
-                <div class="kanban-column" id="inprogress-column">
-                    <div class="kanban-card" id="task4" draggable="true">
-                        <h5>Task 3</h5>
-                        <div class="card-details">Due: 2024-10-18 10:00</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testing (Client) Column -->
-            <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Testing (Client)</h4>
-                <div class="kanban-column" id="testing-column">
-                    <div class="kanban-card" id="task5" draggable="true">
-                        <h5>Task 4</h5>
-                        <div class="card-details">Due: 2024-10-25 12:00</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Deployed Column -->
-            <div class="col-md-4 col-lg-2 mt-3">
-                <h4>Deployed</h4>
-                <div class="kanban-column" id="deployed-column">
-                    <div class="kanban-card" id="task6" draggable="true">
-                        <h5>Task 5</h5>
-                        <div class="card-details">Due: 2024-10-30 09:00</div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -326,52 +314,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Select all the cards and columns
+        
         const kanbanCards = document.querySelectorAll('.kanban-card');
         const kanbanColumns = document.querySelectorAll('.kanban-column');
 
-        // Add event listeners to cards
+        
         kanbanCards.forEach(card => {
             card.addEventListener('dragstart', dragStart);
         });
 
-        // Add event listeners to columns
+        
         kanbanColumns.forEach(column => {
             column.addEventListener('dragover', dragOver);
             column.addEventListener('drop', drop);
         });
 
         function dragStart(e) {
-            e.dataTransfer.setData('text', e.target.id); // Store the card's ID
+            e.dataTransfer.setData('text', e.target.id); 
         }
 
         function dragOver(e) {
-            e.preventDefault(); // Necessary to allow dropping
+            e.preventDefault(); 
         }
 
         function drop(e) {
             e.preventDefault();
-            const cardId = e.dataTransfer.getData('text'); // Get the card's ID
-            const card = document.getElementById(cardId); // Find the card element by ID
-            const column = e.target.closest('.kanban-column'); // Get the target column
-            column.appendChild(card); // Append the card to the column
+            const cardId = e.dataTransfer.getData('text');
+            const card = document.getElementById(cardId);
+            const column = e.target.closest('.kanban-column');
+            column.appendChild(card);
 
-            // Call the function to log details
             logCardDetails(card, column);
         }
 
         function logCardDetails(card, column) {
             const taskName = card.querySelector('h5').id;
-            // const dueDate = card.querySelector('.card-details').textContent;
-            const columnName = column.previousElementSibling.textContent; // The h4 title of the column
+            const columnName = column.previousElementSibling.id;
+            updateTask(taskName, columnName);
 
             console.log(`Card: ${taskName} moved to ${columnName}`);
         }
 
-        function openDetails(title, body, date) {
+        function openDetails(title, body, date, task_id) {
             document.getElementById('detailsModalLabel').innerText = title;
             document.getElementById('detailsModalbody').innerText = body;
             document.getElementById('detailsModaldate').innerText = date;
+            document.getElementById('edit_detail_task').href = `/admin/Task/task/${task_id}/change/`
             document.getElementById('detailsBtn').click()
         }
 
@@ -380,33 +368,35 @@
             const description = document.getElementById('description').value;
             const status = document.getElementById('status').value;
             const client_work = document.getElementById('client_work').value;
+            const client = document.getElementById('client').value;
 
-            // Send POST request to API
+            
             fetch("{% url 'create-task' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',  // Important for form data
-                    'X-CSRFToken': '{{csrf_token}}'
-                },
-                body: new URLSearchParams({
-                    'title': title,
-                    'description': description,
-                    'status': status,
-                    'client_work': client_work
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',  
+                        'X-CSRFToken': '{{csrf_token}}'
+                    },
+                    body: new URLSearchParams({
+                        'title': title,
+                        'description': description,
+                        'status': status,
+                        'client_work': client_work,
+                        'client':client
+                    })
                 })
-            })
                 .then(response => response.json())
                 .then(data => {
                     const responseMessage = document.getElementById('responseMessage');
 
-                    if (data.message) {
-                        // Task created successfully, reload the page
+                    if (data.status) {
+                        
                         responseMessage.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
                         setTimeout(() => {
-                            location.reload();  // Reload the page after showing success message
-                        }, 1500);  // Reload after 1.5 seconds
+                            location.reload();  
+                        }, 1500);  
                     } else if (data.error) {
-                        // Display error message
+                        
                         responseMessage.innerHTML = '<div class="alert alert-danger">' + data.error + '</div>';
                     }
                 })
@@ -414,6 +404,34 @@
                     console.error('Error:', error);
                 });
         }
+
+        function updateTask(task_id, column_name) {
+            fetch("{% url 'update-task' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',  
+                        'X-CSRFToken': '{{csrf_token}}'
+                    },
+                    body: new URLSearchParams({
+                        'task_id':task_id,
+                        'column_name':column_name,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.status) {   
+                        console.log('sgr')                     
+                        location.reload();                        
+                    } else if (data.error) {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
     </script>
 
 </body>

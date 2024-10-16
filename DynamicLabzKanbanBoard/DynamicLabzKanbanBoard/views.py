@@ -39,6 +39,7 @@ def create_task(request):
         description = request.POST.get('description')
         status = request.POST.get('status')
         client_work = request.POST.get('client_work', 'false') == 'true'  # Convert string to boolean
+        client = request.POST.get('client')
 
         # Validate data (you can add more validation as needed)
         if not title or not status:
@@ -50,11 +51,34 @@ def create_task(request):
             description=description,
             status=status,
             client_work=client_work,
+            client=client,
             date=timezone.now()  # This will take the current time automatically
         )
         task.save()
 
         # Return a success response
-        return JsonResponse({'status':True,'message': 'Task created successfully', 'task_id': task.id}, status=201)
+        return JsonResponse({'status':True, 'message': 'Task created successfully', 'task_id': task.id}, status=201)
     else:
-        return JsonResponse({'status':False,'error': 'Invalid request method'}, status=405)
+        return JsonResponse({'status':False, 'error': 'Invalid request method'}, status=405)
+
+def update_task(request):
+    if request.method == 'POST':
+        task_id = request.POST.get('task_id')
+        column_name = request.POST.get('column_name')
+        column_name = str(column_name).replace('_', ' ').replace('Client', '(Client)')
+
+        print(task_id)
+
+        if not task_id or not column_name:
+            return JsonResponse({'error': 'Title and Status are required fields'}, status=400)
+
+        task = Task.objects.get(id=task_id)
+        print(task.status)
+        task.status = column_name
+        task.save()
+        update_task = Task.objects.get(id=task_id)
+        print(update_task.status)
+
+        return JsonResponse({'status':True, 'message': 'Task updated successfully', 'task_id': task.id}, status=200)
+    else:
+        return JsonResponse({'status':False, 'error': 'Invalid request method'}, status=405)

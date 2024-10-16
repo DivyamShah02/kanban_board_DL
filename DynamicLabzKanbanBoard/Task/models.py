@@ -15,6 +15,7 @@ class Task(models.Model):
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     client_work = models.BooleanField(default=False)
+    client = models.CharField(max_length=255, blank=True, null=True, default='')
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
